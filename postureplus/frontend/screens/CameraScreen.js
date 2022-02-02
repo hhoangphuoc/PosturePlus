@@ -6,10 +6,9 @@ import {
   Image,
   Text,
   View,
-  ScrollView,
-  StyleSheet,
   Platform,
   Switch,
+  TouchableOpacity,
 } from "react-native";
 
 //theme redux
@@ -33,7 +32,12 @@ import ExpoWebGLRenderingContext from "expo-gl";
 import * as tf from "@tensorflow/tfjs-core";
 // import * as mobilenet from '@tensorflow-models/mobilenet';
 import { cameraWithTensors } from "@tensorflow/tfjs-react-native";
-import { drawKeypoints, drawSkeleton } from "../components/demo_utils";
+import {
+  drawKeypoints,
+  drawSkeleton,
+  drawPoint,
+  drawSegment,
+} from "../components/demo_utils";
 
 //Tensorflow Model
 import * as posenet from "@tensorflow-models/posenet";
@@ -166,6 +170,7 @@ const CameraScreen = ({ navigation, route }) => {
         .then((pose) => {
           //draw the canvas
           // for PoseNet
+          // draw(context.current);
           drawPose(pose, context.current);
           if (canvas.current != null) {
           }
@@ -199,6 +204,7 @@ const CameraScreen = ({ navigation, route }) => {
 
     drawKeypoints(pose["keypoints"], 0.5, ctx);
     drawSkeleton(pose["keypoints"], 0.5, ctx);
+    context.current.clearRect(0, 0, wi, he);
   };
 
   function startPosture() {
@@ -233,19 +239,40 @@ const CameraScreen = ({ navigation, route }) => {
       <View
         style={{
           marginTop: SIZES.padding,
-          marginHorizontal: SIZES.padding,
+          marginHorizontal: SIZES.radius,
+          flexDirection: "row",
+          top: 20,
         }}
       >
+        {/* Back Button */}
+        <TouchableOpacity
+          style={{
+            width: 45,
+            height: 45,
+            marginTop: SIZES.padding,
+            marginLeft: SIZES.base,
+          }}
+          onPress={() => navigation.goBack()}
+        >
+          <Image
+            source={icons.back}
+            style={{
+              width: 40,
+              height: 40,
+              tintColor: theme.ICON_COLOR,
+            }}
+          />
+        </TouchableOpacity>
         <Text
           style={{
             fontSize: SIZES.h1,
-            lineHeight: 30,
-            alignSelf: "flex-start",
-            top: 50,
+            lineHeight: 32,
+            marginTop: SIZES.padding,
+            alignSelf: "center",
             color: theme.TEXT_COLOR,
           }}
         >
-          Camera
+          Camera Detector
         </Text>
       </View>
       {/* Render Camera frame and Video */}
@@ -257,7 +284,7 @@ const CameraScreen = ({ navigation, route }) => {
           alignItems: "center",
           justifyContent: "center",
           alignSelf: "center",
-          top: 50,
+          top: 20,
         }}
       >
         <TensorCamera
@@ -290,7 +317,6 @@ const CameraScreen = ({ navigation, route }) => {
       <View
         style={{
           flexDirection: "row",
-          top: 20,
           marginTop: SIZES.padding,
           alignSelf: "center",
         }}
@@ -322,8 +348,7 @@ const CameraScreen = ({ navigation, route }) => {
       <TextButton
         label="DONE"
         contentContainerStyle={{
-          top: 20,
-          marginTop: SIZES.padding,
+          marginTop: 16,
           marginHorizontal: SIZES.padding,
           borderRadius: SIZES.radius,
           paddingVertical: SIZES.base,
