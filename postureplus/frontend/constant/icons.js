@@ -23,6 +23,8 @@ const birthday = require("../assets/icons/birthday.png");
 const measurement = require("../assets/icons/measurement.png");
 const edit = require("../assets/icons/edit.png");
 const profilephoto = require("../assets/icons/profilephoto.png");
+const back = require("../assets/icons/back.png");
+const poseInstruction = require("../assets/icons/poseInstruction.png");
 export default {
   home,
   left_arrow,
@@ -47,4 +49,6 @@ export default {
   measurement,
   edit,
   profilephoto,
+  back,
+  poseInstruction,
 };
