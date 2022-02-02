@@ -19,7 +19,7 @@ import {
   ExerciseOverview,
   CameraScreen,
   ResultScreen,
-  TrainingDetection,
+  CameraInstruction,
 } from "../screens";
 import { COLORS, icons, SIZES } from "../constant";
 import { useSelector } from "react-redux";
@@ -74,6 +74,11 @@ const StackNavigator = () => {
         name="ExerciseDetails"
         component={ExerciseDetails}
         options={{ title: "DETAILS" }}
+      />
+      <Stack.Screen
+        name="CameraInstruction"
+        component={CameraInstruction}
+        options={{ title: "INSTRUCTION" }}
       />
       <Stack.Screen
         name="CameraScreen"

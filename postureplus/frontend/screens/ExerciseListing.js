@@ -287,12 +287,6 @@ const ExerciseListing = ({ navigation, route }) => {
 
       {/* Header */}
       {renderHeader()}
-
-      {/* Filter Page */}
-      {/* <FilterPage
-                filterModalSharedValue1={filterModalSharedValue1}
-                filterModalSharedValue2={filterModalSharedValue2}
-            /> */}
     </View>
   );
 };

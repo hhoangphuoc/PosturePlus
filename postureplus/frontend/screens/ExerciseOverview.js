@@ -28,25 +28,6 @@ const ExerciseOverview = ({ navigation, route }) => {
   const wishlist = useSelector((state) => state.bookmarkReducer.wishlist);
   const dispatch = useDispatch();
 
-  // const [isAdded, setIsAdded] = useState(false);
-
-  // const selectBookmark = (exercise) => {
-  //   if (isAdded) {
-  //     console.log("remove bookmark from wishlist...");
-  //     if (wishlist.filter((item) => item.id === exercise.id).length > 0) {
-  //       console.log(wishlist);
-  //       dispatch(removeFromWishList(exercise));
-  //     }
-  //   } else {
-  //     console.log("add bookmark to wishlist...");
-  //     if (exercise.id === wishlist) {
-  //       console.log(wishlist);
-  //       dispatch(addToWishList(exercise));
-  //     }
-  //   }
-  //   setIsAdded((previousState) => !previousState);
-  // };
-
   const onTapAddToWishList = (exercise) => {
     console.log("adding to wishlist");
     dispatch(addToWishList(exercise));
@@ -216,56 +197,6 @@ const ExerciseOverview = ({ navigation, route }) => {
           </TouchableOpacity>
         )}
       </SharedElement>
-      {/* {isAdded ? (
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: "15%",
-            right: "5%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onPress={() => {
-            selectBookmark(exercise);
-            // onTapRemoveFromWishList(exercise);
-          }}
-        >
-          <Image
-            source={icons.bookmark}
-            style={{
-              width: 45,
-              height: 45,
-              marginLeft: SIZES.base,
-              marginTop: SIZES.base,
-              tintColor: "#ffbf00",
-            }}
-          />
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={{
-            position: "absolute",
-            top: "15%",
-            right: "5%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          onPress={() => {
-            selectBookmark(exercise);
-          }}
-        >
-          <Image
-            source={icons.bookmark}
-            style={{
-              width: 50,
-              height: 50,
-              marginLeft: SIZES.base,
-              marginTop: SIZES.base,
-              tintColor: COLORS.white,
-            }}
-          />
-        </TouchableOpacity>
-      )} */}
       <TouchableOpacity
         style={{
           position: "absolute",
@@ -305,10 +236,7 @@ const ExerciseOverview = ({ navigation, route }) => {
           alignItems: "center",
           justifyContent: "center",
         }}
-        //activate the camera
-        // onPress={() =>
-        //   navigation.navigate("CameraScreen", { exercise: exercise })
-        // }
+        onPress={() => navigation.navigate("CameraInstruction")}
       >
         <Image
           source={icons.camera}
