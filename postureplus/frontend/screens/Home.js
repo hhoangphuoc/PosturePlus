@@ -41,7 +41,6 @@ const Home = () => {
             marginLeft: SIZES.radius,
             marginVertical: SIZES.padding,
             borderRadius: 10,
-            marginTop: 12,
             backgroundColor: COLORS.lightGray,
           }}
           onPress={() => navigation.openDrawer()}
@@ -58,7 +57,7 @@ const Home = () => {
         </TouchableOpacity>
         <Text
           style={{
-            fontSize: 44,
+            fontSize: 40,
             lineHeight: 44,
             letterSpacing: 2.5,
             marginHorizontal: 32,

@@ -193,19 +193,39 @@ const ExerciseDetails = ({ navigation, route }) => {
         // top:"15%"
       }}
     >
-      <Text
-        style={{
-          fontSize: SIZES.h1,
-          lineHeight: 30,
-          alignSelf: "flex-start",
-          top: 60,
-          marginTop: SIZES.base,
-          marginLeft: SIZES.padding,
-          color: theme.TEXT_COLOR,
-        }}
-      >
-        Exercise Detail
-      </Text>
+      <View style={{ top: 50, flexDirection: "row" }}>
+        {/* Back Button */}
+        <TouchableOpacity
+          style={{
+            width: 45,
+            height: 45,
+            marginLeft: SIZES.radius,
+          }}
+          onPress={() => navigation.goBack()}
+        >
+          <Image
+            source={icons.back}
+            style={{
+              width: 40,
+              height: 40,
+              tintColor: theme.ICON_COLOR,
+            }}
+          />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: SIZES.h1,
+            lineHeight: 30,
+            alignSelf: "center",
+            // top: 60,
+            marginLeft: SIZES.padding,
+            color: theme.TEXT_COLOR,
+          }}
+        >
+          Exercise Detail
+        </Text>
+      </View>
+
       {renderVideoSection()}
       {renderDescription()}
     </View>

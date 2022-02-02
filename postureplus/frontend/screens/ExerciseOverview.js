@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  Switch,
-} from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, Image } from "react-native";
 
 import { SharedElement } from "react-native-shared-element";
 
@@ -54,17 +47,38 @@ const ExerciseOverview = ({ navigation, route }) => {
         backgroundColor: theme.BG_COLOR,
       }}
     >
-      <Text
-        style={{
-          fontSize: SIZES.h1,
-          lineHeight: 30,
-          alignSelf: "center",
-          top: 60,
-          color: theme.TEXT_COLOR,
-        }}
-      >
-        Exercise Overview
-      </Text>
+      <View style={{ top: 50, flexDirection: "row" }}>
+        {/* Back Button */}
+        <TouchableOpacity
+          style={{
+            width: 45,
+            height: 45,
+            marginLeft: SIZES.radius,
+          }}
+          onPress={() => navigation.goBack()}
+        >
+          <Image
+            source={icons.back}
+            style={{
+              width: 40,
+              height: 40,
+              tintColor: theme.ICON_COLOR,
+            }}
+          />
+        </TouchableOpacity>
+        <Text
+          style={{
+            fontSize: SIZES.h1,
+            lineHeight: 30,
+            alignSelf: "center",
+            color: theme.TEXT_COLOR,
+            marginLeft: SIZES.base,
+          }}
+        >
+          Exercise Overview
+        </Text>
+      </View>
+
       <SharedElement
         id={`${sharedElementPrefix}-exercise-name-${exercise?.id}`}
         style={[StyleSheet.absoluteFillObject]}
