@@ -3,8 +3,12 @@ import { View, Text, FlatList } from "react-native";
 import { SIZES, COLORS, icons, dummydata } from "../constant";
 import { Section, VerticalCard } from "../components";
 
+import { useSelector } from "react-redux";
+
 const ResultScreen = ({ navigation, route }) => {
   const { exercise } = route.params;
+
+  const theme = useSelector((state) => state.themeReducer.theme);
 
   const port = 8888;
   //   const ip = "192.168.1.102";
@@ -91,7 +95,7 @@ const ResultScreen = ({ navigation, route }) => {
           <Text
             style={{
               fontSize: SIZES.h1,
-              lineHeight: 36,
+              lineHeight: 30,
               color: COLORS.white,
               fontWeight: "bold",
               marginTop: 10,
@@ -101,8 +105,8 @@ const ResultScreen = ({ navigation, route }) => {
           </Text>
           <Text
             style={{
-              fontSize: 22,
-              lineHeight: 30,
+              fontSize: 20,
+              lineHeight: 24,
               color: COLORS.white,
             }}
           >
@@ -112,7 +116,7 @@ const ResultScreen = ({ navigation, route }) => {
         <View
           style={{
             marginLeft: SIZES.padding,
-            marginTop: SIZES.base,
+            // marginTop: SIZES.base,
           }}
         >
           <View
@@ -174,19 +178,20 @@ const ResultScreen = ({ navigation, route }) => {
           <View style={{ flexDirection: "column" }}>
             <Text
               style={{
-                paddingTop: SIZES.base,
-                fontSize: SIZES.h4,
+                paddingTop: 10,
+                fontSize: 16,
                 color: COLORS.white,
+                fontWeight: "bold",
               }}
             >
               Suggestion:
             </Text>
             <Text
               style={{
-                paddingTop: 8,
+                paddingTop: 4,
                 paddingLeft: SIZES.radius,
                 fontSize: SIZES.h4,
-                color: COLORS.black,
+                color: COLORS.white,
               }}
             >
               {mistakeData[0]?.suggestions}
@@ -203,7 +208,7 @@ const ResultScreen = ({ navigation, route }) => {
         title="To be continue..."
         containerStyle={{
           top: 20,
-          marginTop: SIZES.padding,
+          marginTop: 20,
         }}
         titleStyle={{
           fontSize: 20,
@@ -245,7 +250,7 @@ const ResultScreen = ({ navigation, route }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: COLORS.white,
+        backgroundColor: theme.BG_COLOR,
       }}
     >
       {renderResultBoard()}

@@ -78,19 +78,6 @@ const VerticalCard = ({
               {exercise.name}
             </Text>
           </SharedElement>
-          {/* <TouchableOpacity onPress={() => selectBookmark}>
-            <Image
-              source={icons.bookmark}
-              style={{
-                width: 30,
-                height: 30,
-                marginLeft: SIZES.base,
-                marginTop: SIZES.base,
-                tintColor: COLORS.white,
-                ...bookmarkStyle,
-              }}
-            />
-          </TouchableOpacity> */}
         </View>
       </View>
       {/* Exercise Info */}
@@ -126,15 +113,6 @@ const VerticalCard = ({
           >
             Reps: {exercise.reps}
           </Text>
-          {/* Duration */}
-          {/* <Text 
-                        style={{
-                            marginLeft:SIZES.padding,
-                            ...FONTS.body4
-                        }}
-                    >
-                        Duration: {exercise.duration}
-                    </Text> */}
         </View>
         <Image
           source={icons.right_arrow}

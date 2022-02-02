@@ -34,13 +34,14 @@ const Home = () => {
       >
         <TouchableOpacity
           style={{
-            width: 45,
-            height: 45,
+            width: 50,
+            height: 50,
             alignItems: "center",
             justifyContent: "center",
             marginLeft: SIZES.radius,
             marginVertical: SIZES.padding,
             borderRadius: 10,
+            marginTop: 12,
             backgroundColor: COLORS.lightGray,
           }}
           onPress={() => navigation.openDrawer()}
@@ -57,10 +58,10 @@ const Home = () => {
         </TouchableOpacity>
         <Text
           style={{
-            fontSize: SIZES.largeTitle,
-            lineHeight: 40,
+            fontSize: 44,
+            lineHeight: 44,
             letterSpacing: 2.5,
-            marginHorizontal: 36,
+            marginHorizontal: 32,
             marginVertical: SIZES.radius,
             paddingTop: SIZES.base,
             color: theme.TEXT_COLOR,
@@ -112,10 +113,6 @@ const Home = () => {
   }
 
   function renderRecommendedExercises() {
-    // const addBookmark = (item) => {
-    //   //TODO: create a function for this so that it add add item to bookmark list
-    // };
-
     return (
       <Section
         title="Recommended"

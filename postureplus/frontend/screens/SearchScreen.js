@@ -37,12 +37,6 @@ const SearchScreen = () => {
   const wishlist = useSelector((state) => state.bookmarkReducer.wishlist);
   const scrollViewRef = React.useRef();
 
-  //search bar
-  // const scrollY = useSharedValue(0);
-  // const onScroll = useAnimatedScrollHandler((event) => {
-  //   scrollY.value = event.contentOffset.y;
-  // });
-
   const navigation = useNavigation();
 
   // Searching Filter:_________________________________________________________________
