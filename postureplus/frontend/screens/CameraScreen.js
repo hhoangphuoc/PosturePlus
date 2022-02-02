@@ -9,7 +9,11 @@ import {
   ScrollView,
   StyleSheet,
   Platform,
+  Switch,
 } from "react-native";
+
+//theme redux
+import { useSelector } from "react-redux";
 
 //picker
 // import RNPickerSelect from 'react-native-picker-select';
@@ -22,9 +26,9 @@ import CanvasRenderingContext2D from "react-native-canvas";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
+import ExpoWebGLRenderingContext from "expo-gl";
 
 //Tensorflow Dependencies
-
 //import * as tf from '@tensorflow/tfjs';
 import * as tf from "@tensorflow/tfjs-core";
 // import * as mobilenet from '@tensorflow-models/mobilenet';
@@ -45,6 +49,7 @@ import { TextButton } from "../components";
 
 const CameraScreen = ({ navigation, route }) => {
   const { exercise } = route.params;
+  const theme = useSelector((state) => state.themeReducer.theme);
 
   let textureDims =
     Platform.OS == "ios"
@@ -56,16 +61,11 @@ const CameraScreen = ({ navigation, route }) => {
   const [hasPermission, setHasPermission] = useState(null);
 
   //Tensorflow and Permissions
-
   const [posenetModel, setposenetModel] = useState(null);
   const [frameworkReady, setFrameworkReady] = useState(false);
+  const [isStartPose, setIsStartPose] = useState(false);
 
   //const [moveNetModel, setMoveNetModel] = useState(null);
-
-  //defaults
-
-  //if adding more languages, map codes from this list:
-  // https://cloud.google.com/translate/docs/languages
 
   //TF Camera Decorator
   const TensorCamera = cameraWithTensors(Camera);
@@ -73,17 +73,12 @@ const CameraScreen = ({ navigation, route }) => {
   //RAF ID
   let requestAnimationFrameId = 0;
 
-  //performance hacks (Platform dependent)
-
-  // const textureDims = Platform.OS === "ios" ? { width: 1080, height: 1920 } : { width: 600, height: 800 };
-  // const tensorDims = { width: 152, height: 200 };
-  // const webViewRef = null;
-
   const wi = 360;
   const he = 480;
 
   const context = useRef(CanvasRenderingContext2D);
   const canvas = useRef(Canvas);
+
   //-----------------------------
   // Run effect once
   // 1. Check camera permissions
@@ -97,7 +92,7 @@ const CameraScreen = ({ navigation, route }) => {
       const ctx = can.getContext("2d");
       context.current = ctx;
       canvas.current = can;
-      draw(ctx);
+      // draw(ctx);
 
       if (canvas.current != null) {
       }
@@ -118,8 +113,6 @@ const CameraScreen = ({ navigation, route }) => {
         //load the mobilenet model and save it in state
         setposenetModel(await loadposenetModel());
 
-        //load movenetmodel
-        //setMoveNetModel(await loadMoveNetModel());
         setFrameworkReady(true);
       })();
     }
@@ -139,6 +132,7 @@ const CameraScreen = ({ navigation, route }) => {
     ctx.stroke();
   }
 
+  //component will unmount
   useEffect(() => {
     return () => {
       cancelAnimationFrame(requestAnimationFrameId);
@@ -151,28 +145,24 @@ const CameraScreen = ({ navigation, route }) => {
       // inputResolution: { width: wi, height: he },
       inputResolution: { width: 360, height: 480 },
       scale: 0.5,
+      // architecture: "MobileNetV1",
+      // outputStride: 16,
+      // multiplier: 0.75,
+      // quantBytes: 2,
     });
+    model.estimateSinglePose;
     return model;
   };
 
-  // const loadMoveNetModel = async () => {
-  //     const detectorConfig = {modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING};
-  //     const detector = await poseDetection.createDetector(poseDetection.SupportedModels.MoveNet, detectorConfig);
-
-  //     return detector;
-  // }
-
-  const handleCameraStream = (imageAsTensors) => {
+  const handleCameraStream = async (imageAsTensors) => {
     const loop = async () => {
       const nextImageTensor = await imageAsTensors.next().value;
+      const flipHorizontal = Platform.OS === "ios" ? false : true;
 
       if (!posenetModel || !nextImageTensor)
         throw new Error("Unable to load the model");
-      // const pose =
-
-      // const pose = await posenetModel.estimateSinglePose(nextImageTensor)
       posenetModel
-        .estimateSinglePose(nextImageTensor)
+        .estimateSinglePose(nextImageTensor, { flipHorizontal })
         .then((pose) => {
           //draw the canvas
           // for PoseNet
@@ -184,21 +174,13 @@ const CameraScreen = ({ navigation, route }) => {
           console.error(error);
         });
 
-      //const poses = await detector.estimatePoses(nextImageTensor);
-
-      // const cntx = context.current;
-      //draw(cntx);
-
-      //for MoveNet model
-      //drawCanvas(poses,canvas)
-
       requestAnimationFrameId = requestAnimationFrame(loop);
     };
     loop();
   };
 
   const drawPose = (pose, ctx) => {
-    const flipHorizontalKeypoints = [];
+    // const flipHorizontalKeypoints = [];
     if (!canvas.current) {
       console.log("NO canvas found");
       return;
@@ -211,56 +193,41 @@ const CameraScreen = ({ navigation, route }) => {
     //clear the previous context in the canvas
     context.current.clearRect(0, 0, wi, he);
 
-    for (const point of pose["keypoints"]) {
-      const pointPos = point["position"];
-      pointPos.x = canvas.current.width - pointPos.x;
-      flipHorizontalKeypoints.push(point);
-    }
-    // console.log(flipHorizontalKeypoints)
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //TODO: Uncommented if the test is wrong_______________________
 
-    // console.log(pose["keypoints"]);
+    console.log("drawing pose...");
 
-    // drawKeypoints(pose["keypoints"], 0.5, ctx);
-    // drawSkeleton(pose["keypoints"], 0.5, ctx);
-
-    drawKeypoints(flipHorizontalKeypoints, 0.5, ctx);
-    drawSkeleton(flipHorizontalKeypoints, 0.5, ctx);
+    drawKeypoints(pose["keypoints"], 0.5, ctx);
+    drawSkeleton(pose["keypoints"], 0.5, ctx);
   };
 
-  // //FUNCTION TO DRAW CAMERA ON CANVAS
-  // function renderCamera() {
-  //     return (
-  //     <View
-  //         // style={{
-  //         //     top:"10%",
-  //         //     marginVertical: SIZES.padding,
-  //         //     marginHorizontal: 36,
-  //         //     paddingVertical:SIZES.base,
-  //         //     alignItems: "center",
-  //         //     justifyContent: "center",
-  //         //     backgroundColor:COLORS.primary,
-  //         //     borderRadius:SIZES.radius,
-  //         // }}
-  //         style={{
-  //             flex: 1,
-  //             backgroundColor:COLORS.white
-  //         }}
-  //     >
+  function startPosture() {
+    setIsStartPose(true);
+    //runMovenet();
+  }
 
-  //     </View>
-  //     )
-  // } // end of the function
+  function stopPosture() {
+    setIsStartPose(false);
+    // clearInterval(interval);
+  }
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [text, setText] = useState("Turn on");
+  const toggleSwitch = () => {
+    if (isEnabled) {
+      setText("Turn on");
+      stopPosture();
+    } else {
+      setText("Turn off");
+      startPosture();
+    }
+    setIsEnabled((previousState) => !previousState);
+  };
 
   return (
     <View
       style={{
         flex: 1,
-        backgroundColor: COLORS.white,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // // height:"100%",
-        // // width:"100%",
+        backgroundColor: theme.BG_COLOR,
       }}
     >
       <View
@@ -275,6 +242,7 @@ const CameraScreen = ({ navigation, route }) => {
             lineHeight: 30,
             alignSelf: "flex-start",
             top: 50,
+            color: theme.TEXT_COLOR,
           }}
         >
           Camera
@@ -294,8 +262,6 @@ const CameraScreen = ({ navigation, route }) => {
       >
         <TensorCamera
           style={{
-            // width: wi,
-            // height: he,
             width: "100%",
             height: "100%",
           }}
@@ -306,7 +272,9 @@ const CameraScreen = ({ navigation, route }) => {
           resizeHeight={he}
           resizeWidth={wi}
           resizeDepth={3}
-          onReady={(imageAsTensors) => handleCameraStream(imageAsTensors)}
+          onReady={(imageAsTensors) => {
+            if (isEnabled) return handleCameraStream(imageAsTensors);
+          }}
           autorender={true}
         />
         <Canvas
@@ -319,11 +287,42 @@ const CameraScreen = ({ navigation, route }) => {
           ref={handleCanvas}
         />
       </View>
+      <View
+        style={{
+          flexDirection: "row",
+          top: 20,
+          marginTop: SIZES.padding,
+          alignSelf: "center",
+        }}
+      >
+        <Switch
+          trackColor={{ false: COLORS.lightGray, true: COLORS.secondary }}
+          thumbColor={isEnabled ? COLORS.secondary : "#e4e4e4"}
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+          style={{
+            marginTop: SIZES.base,
+            marginRight: SIZES.base,
+            transform: [{ scaleX: 1.5 }, { scaleY: 1.5 }],
+          }}
+        />
+        <Text
+          style={{
+            marginTop: 16,
+            marginLeft: SIZES.base,
+            fontSize: SIZES.h3,
+            lineHeight: 22,
+            color: theme.TEXT_COLOR,
+          }}
+        >
+          {text}
+        </Text>
+      </View>
 
       <TextButton
         label="DONE"
         contentContainerStyle={{
-          top: 50,
+          top: 20,
           marginTop: SIZES.padding,
           marginHorizontal: SIZES.padding,
           borderRadius: SIZES.radius,

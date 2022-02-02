@@ -144,10 +144,7 @@ const ExerciseDetails = ({ navigation, route }) => {
             flexDirection: "row",
             // alignItems: 'center',justifyContent:'center'
           }}
-          // onPress={() => {setCamera(true)}}
-          // onPress={() =>
-          //   navigation.navigate("CameraScreen", { exercise: selectedExercise })
-          // }
+          onPress={() => navigation.navigate("CameraInstruction")}
         >
           <Image
             source={icons.camera}
